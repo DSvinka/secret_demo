@@ -469,7 +469,7 @@ table inet nat {
 
 # TASK 9. Nginx - Финальный финал ваших страданий
 ---
-# HQ-RTR
+# ISP
 
 ```bash
 nano /etc/nginx/sites-available/reverse.conf
@@ -504,7 +504,7 @@ systemctl enable --now nginx
 > Если папка nginx или сервис nginx не найдены - ставим nginx.
 > `apt-get install -y nginx`
 
-# TASK 10. Nginx - Авторизация через nginx на ISP
+# TASK 10. Nginx - Авторизация через nginx
 ---
 ## ISP
 
