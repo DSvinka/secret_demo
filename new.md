@@ -187,3 +187,114 @@ systemctl restart nfs
 ---
 
 Одна из самых приятных частей...
+
+## ISP
+```bash
+vim /etc/chrony.conf
+	local stratum 5
+	allow 172.16.1.0/28
+	allow 172.16.2.0/28
+	# --- Остальные пункты УДАЛИТЬ ---
+
+systemctl enable –-now chronyd
+```
+
+## HQ-SRV, HQ-SRV, BR-RTR, BR-SRV, HQ-CLI
+```bash
+nano /etc/chrony.conf
+	server 172.16.1.1 iburst prefer
+	#   IP ^^^^^^^^^^ Меняем на свой, тот что 
+	# показывает на ISP, на устройстве 
+	# который настраиваем
+	# --- Остальные пункты УДАЛИТЬ ---
+```
+
+```bash
+systemctl enable --now chronyd
+chronyc sources
+```
+
+> Иногда chronyd может быть уже запущен, по этому если в `chronyc sources` вы видите не тот IP, можно попробовать выполнить `systemctl restart chronyd`
+
+> На BR-RTR и HQ-RTR может выдаваться `_gateway`, это нормально и не является ошибкой. Т.к. 172.16.2.1 и 172.16.1.1 соответственно для них являются шлюзами. 
+
+Ну на этом приятная часть заканчивается...
+
+# TASK 4. Настраиваем Ansible (SSH, SSH, и ещё раз SSH)
+
+## BR-SRV
+> Проверьте установлен ли Ansible, если его нет (команда `ansible` не найдена) то установите его.
+> `apt-get install -y ansible`
+
+Сначала делаем для root
+```bash
+ssh-keygen -t rsa
+	Enter (x3)
+```
+
+И тоже самое под sshuser с последующей загрузкой ключей по SSH
+```bash
+su - sshuser
+
+ssh-keygen -t rsa
+	Enter (x3)
+	
+# ВСЕ IP МЕНЯЙТЕ НА СВОИ!
+# vvv HQ-SRV vvv
+ssh-copy-id -p 2026 sshuser@192.168.0.2
+# vvv HQ-CLI vvv
+ssh-copy-id user@192.168.1.10
+# vvv HQ-RTR vvv
+ssh-copy-id net_admin@172.16.1.2
+# vvv BR-RTR vvv
+ssh-copy-id net_admin@172.16.2.2
+```
+
+> Если у вас вдруг вылезет ошибка то можно попробовать на устройстве, к которому вы пытаетесь подключится, включить sshd. (например на роутерах и на клиенте)
+> `systemctl enable --now sshd`
+
+Затем выходим из под sshuser и создаем инвентарь ansible.
+
+```bash
+exit
+nano /etc/ansible/inv
+```
+```python
+[hq]
+192.168.0.2 ansible_port=2026 ansible_user=sshuser
+192.168.1.10 ansible_user=user
+172.16.1.2 ansible_user=net_admin
+
+[br]
+192.168.3.1 ansible_user=net_admin
+```
+
+> IP меняйте на свои, тут порядок такой: HQ-SRV, HQ-CLI, HQ-RTR, BR-RTR
+
+Теперь необходимо отключить предупреждение о петухоне
+```shell
+nano /etc/ansible/ansible.cfg
+	[defaults]
+	interpreter_python=auto_silent
+```
+
+Затем запускаем процесс от пользователя sshuser.
+```shell
+su - sshuser
+ansible all -i /etc/ansible/inv -m ping
+```
+
+# TASK 5. Ох... Docker...
+
+## BR-SRV
+Видимо на демо экзамене орги решили выпендриться и сделать установку image через iso файл.
+Из плюсов, они оставили readme.txt с подсказкой для настройки `env` параметров.
+
+Первым делом включаем докер и даем доступ к нему для sshuser.
+```bash
+systemctl enable --now docker
+usermod -aG docker sshuser
+```
+> Если докер не стоит, то ставим его: 
+> `apt-get install -y docker-engine docker-compose-v2 `
+
