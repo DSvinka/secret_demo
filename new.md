@@ -416,7 +416,7 @@ EXIT;
 
 Теперь необходимо импортировать базу данных с Additional.iso, но перед этим нужно исправить кодировку.
 ```bash
-iconv -f utf-16le utf-8 /mnt/web/dump.sql > damp.sql
+iconv -f utf-16le utf-8 /mnt/web/dump.sql > dump.sql
 mariadb -u root -p webdb < dump.sql
 	P@ssw0rd
 ```
