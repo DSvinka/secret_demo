@@ -25,7 +25,7 @@ nano /etc/resolv.conf
 	search au-team.irpo
 	nameserver 192.168.3.2
 	# Замените ^^^^^^^^^^^ 
-	# НА ВАШ IP адрес BR-SRVAD
+	# НА ВАШ IP адрес BR-SRV
 ```
 
 Заходим в "Центр Управления Системой"
