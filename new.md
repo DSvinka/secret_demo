@@ -118,7 +118,7 @@ fdisk /dev/sdc
 И снова блюём командами в консось
 
 ```bash
-mdadm --create --verbose /dev/md0 -l 0 -n 2 /dev/sdb1 /dev/sdcc1
+mdadm --create --verbose /dev/md0 -l 0 -n 2 /dev/sdb1 /dev/sdc1
 mdadm --detail --scan >> /etc/mdadm.conf
 
 mkfs.ext4 /dev/md0
