@@ -1,13 +1,7 @@
 #!/bin/bash
 
-# Скрипт автоматизированной настройки инфраструктуры Alt Linux (Модуль 3)
-# Использование: sudo ./alt_linux_autodeploy.sh [роль]
+# Использование: sudo ./part-3-autoscript.sh [роль]
 # Роли: hq-srv | br-srv | hq-rtr | br-rtr | isp
-
-if [ "$EUID" -ne 0 ]; then
-  echo "[-] Ошибка: Пожалуйста, запустите скрипт с правами root (sudo)."
-  exit 1
-fi
 
 ROLE=$1
 
