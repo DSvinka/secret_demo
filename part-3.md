@@ -4,13 +4,13 @@
 Его выполнять нужно на машине, которую хотите настроить.
 Выполнять от пользователя - рута. Можно по SSH, можно по Proxmox
 ```sh
- bash <(curl https://dsvinka.ru/demo/part-1-script.sh) {имя машины}
+ bash <(curl https://dsvinka.ru/demo/part-3-script.sh) {имя машины}
 
 # Пример:
- bash <(curl -s https://dsvinka.ru/demo/part-1-script.sh) hq-srv
+ bash <(curl -s https://dsvinka.ru/demo/part-3-script.sh) hq-srv
 
 # Скрипт автоматизированной настройки
-# Использование: bash <(curl -s https://dsvinka.ru/demo/part-1-script.sh) [роль]
+# Использование: bash <(curl -s https://dsvinka.ru/demo/part-3-script.sh) [роль]
 # Роли: hq-srv | br-srv | hq-rtr | br-rtr | isp
 ```
 После выполнение нужно делать clear или просто рестарт машины делать.
